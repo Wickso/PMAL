@@ -1,5 +1,5 @@
 <p align="center">
-This work is covered under the Apache 2.0 Licence articulated inside LICENCE.md
+This work is covered under the Apache 2.0 Licence articulated inside LICENCE
 </p>
 
 # PMAL
