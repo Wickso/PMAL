@@ -1,6 +1,7 @@
 # dirs
 build
 .cache
+docs
 
 #files
 compile_commands.json

@@ -1,3 +1,37 @@
+
+# Alignment
+AlignAfterOpenBracket: Align
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+AlignEscapedNewlines: LeftWithLastLine
+AlignTrailingComments: Always
+
+# Allowances
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: false
+
+
+# Breaks
+BreakArrays: false
+BreakBeforeBraces: Attach
+
+# Include
+IncludeBlocks: Regroup
+
+# Other
 IndentWidth: 4
 ColumnLimit: 100
 MaxEmptyLinesToKeep: 2
+SpacesInContainerLiterals: true
+ReflowComments: true
+SpacesInLineCommentPrefix:
+  Minimum: 1
+  Maximum: -1
+Standard: c++20
