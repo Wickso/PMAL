@@ -19,7 +19,7 @@ Simply put, it is a suite of memory allocators and smart pointers for the user t
 The only dependencies are:
 - Compiler capable of C++ 20 (LLVM > GCC > MSVC)
 - CMAKE (version 3.30 or later)
-- Ninja build tool (optional as CMAKE needs ninja or unix makefile generators for clangd to play nice)
+- Ninja build tool (optional as CMAKE needs ninja or unix makefile generators for clangd to play nice): really only needed if you plan on adding to the code
 
 Should be platform agnostic and majority of distros of Linux should play nice too.  
 **NOTE:** Not supported for windows just yet
@@ -40,4 +40,4 @@ The following are other flags:
 - -rd, -releasedebug : build release + debug information
 - -c, -clean : clean build
 
-**NOTE:** "./build.sh" defaults to just release build
+**NOTE:** An absence of the '-d' -'rd' flags defaults to release build
