@@ -2,6 +2,7 @@
 #define MEMORY_MANAGER_H
 
 #include "defines.h"
+#include <vector>
 
 namespace PMAL {
 
@@ -17,23 +18,30 @@ namespace PMAL {
  * Composed of user memory (what is interacted with directly) and registry memory (holds metadata
  * (e.g. allocators, statistics if enabled)).
  *
- * @param [size] sizeBytes
- * Takes a size in bytes to allocate for user memory.
- * @param [size] sizeBytesRegistry (default value 1MiB)
- * Take a size in bytes to allocate for registry memory.
+ * @param [ManagerSpec] ptrMemoryManagerSpec
+ * A struct specifying base information and options for MemoryManager.
+ * 
  */
 class MemoryManager {
   public:
-    MemoryManager(size sizeBytes, size sizeBytesRegistry = 1024 * 1024);
+    MemoryManager(ManagerSpec *ptrMemoryManagerSpec);
     ~MemoryManager();
 
     template <typename ALLOCATOR_T> ALLOCATOR_T *allocator(size sizeBytes);
 
-    bool requestMemory(size sizeBytes);
+    bool reSizeMemory(size sizeBytes);
+
 
 
   private:
-    void *m_managedMemory = nullptr;
+    bool defregmentUserMemory();
+    Block* generateBlock();    
+
+    void *m_ptrManagedMemory  = nullptr;
+    void *m_ptrRegistryMemory = nullptr;
+    void *m_ptrUserMemory     = nullptr;
+
+    std::vector<Block> m_blocks = {};
 };
 
 
@@ -43,7 +51,10 @@ class MemoryManager {
  * Internal allocator for user allocators when one is requested.
  *
  * The user requests an allocator via this template with a specified size in bytes as the scope of
- * this allocator to work within.
+ * this allocator to work within. Allocators hold a reference to the MemoryManager object that
+ * created it and vice versa. This means that the MemoryManager can free the allocator if
+ * MemoryManager itself is freed and if the allocator is no longer needed then its reference is
+ * removed from the MemoryManager as to nullify any chances of use after free errors.
  *
  * @param [size] sizeBytes:
  * The size in bytes of memory requested.

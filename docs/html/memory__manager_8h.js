@@ -1,4 +1,4 @@
 var memory__manager_8h =
 [
-    [ "PMAL::MemoryManager", "class_p_m_a_l_1_1_memory_manager.html", "class_p_m_a_l_1_1_memory_manager" ]
+    [ "PMAL::MemoryManager", "classPMAL_1_1MemoryManager.html", "classPMAL_1_1MemoryManager" ]
 ];

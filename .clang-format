@@ -22,9 +22,6 @@ AllowShortFunctionsOnASingleLine: false
 BreakArrays: false
 BreakBeforeBraces: Attach
 
-# Include
-IncludeBlocks: Regroup
-
 # Other
 IndentWidth: 4
 ColumnLimit: 100

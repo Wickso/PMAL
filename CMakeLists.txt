@@ -24,7 +24,7 @@ add_executable(test_app.exe ${SRC_EXE})
 
 target_include_directories(PMAL
     PUBLIC 
-    "src/includes"
+    "src/"
     "src/allocators"
     "src/PMAL"
 )

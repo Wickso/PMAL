@@ -25,31 +25,32 @@
 var NAVTREE =
 [
   [ "PMAL", "index.html", [
-    [ "PMAL", "md__r_e_a_d_m_e.html", [
-      [ "Build Dependencies", "md__r_e_a_d_m_e.html#autotoc_md4", [
-        [ "What This Is", "md__r_e_a_d_m_e.html#autotoc_md1", null ],
-        [ "Why?", "md__r_e_a_d_m_e.html#autotoc_md2", null ],
-        [ "What This Isn't", "md__r_e_a_d_m_e.html#autotoc_md3", null ],
-        [ "Building", "md__r_e_a_d_m_e.html#autotoc_md5", null ]
+    [ "PMAL", "md_README.html", [
+      [ "Build Dependencies", "md_README.html#autotoc_md4", [
+        [ "What This Is", "md_README.html#autotoc_md1", null ],
+        [ "Why?", "md_README.html#autotoc_md2", null ],
+        [ "What This Isn't", "md_README.html#autotoc_md3", null ],
+        [ "Building", "md_README.html#autotoc_md5", null ]
       ] ]
     ] ],
     [ "Namespaces", "namespaces.html", [
-      [ "Namespace List", "namespaces.html", "namespaces_dup" ]
+      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
+      [ "Namespace Members", "namespacemembers.html", [
+        [ "All", "namespacemembers.html", null ],
+        [ "Typedefs", "namespacemembers_type.html", null ]
+      ] ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", null ],
-        [ "Functions", "functions_func.html", null ]
+        [ "Functions", "functions_func.html", null ],
+        [ "Variables", "functions_vars.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ],
-      [ "File Members", "globals.html", [
-        [ "All", "globals.html", null ],
-        [ "Typedefs", "globals_type.html", null ]
-      ] ]
+      [ "File List", "files.html", "files_dup" ]
     ] ]
   ] ]
 ];

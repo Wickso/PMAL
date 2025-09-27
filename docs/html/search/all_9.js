@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['u32_0',['u32',['../defines_8h.html#a65cf28726f89e62ccf2f1354bc2716df',1,'defines.h']]],
-  ['u64_1',['u64',['../defines_8h.html#a66e1d499241ccae9a18a20a1f4f0590d',1,'defines.h']]]
+  ['size_0',['size',['../namespacePMAL.html#a1f1166c21b1835fe2af2673ca49fdb0d',1,'PMAL']]],
+  ['sizebytes_1',['sizeBytes',['../structPMAL_1_1Block.html#a7d1024cbdbf25fb11f581795ecbf2161',1,'PMAL::Block::sizeBytes'],['../structPMAL_1_1Handle.html#afa45da8bd8c254d646bdda661c945a35',1,'PMAL::Handle::sizeBytes'],['../structPMAL_1_1ManagerSpec.html#a72fbcf087cc54c83fdfb3edcf4e74c32',1,'PMAL::ManagerSpec::sizeBytes']]],
+  ['sizebytesregistry_2',['sizeBytesRegistry',['../structPMAL_1_1ManagerSpec.html#a556718326a7ad12db8d33cee1ad04c59',1,'PMAL::ManagerSpec']]],
+  ['success_3',['success',['../structPMAL_1_1ManagerSpec.html#a95730087dd1023eed358845a0454c50a',1,'PMAL::ManagerSpec']]]
 ];
