@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 
-
+// TODO: Fix this contructor for ManagerSpec struct.
 PMAL::MemoryManager::MemoryManager(size sizeBytes, size sizeBytesRegistry) {
     m_ptrManagedMemory = std::malloc(sizeBytes + sizeBytesRegistry);
     if (m_ptrRegistryMemory == nullptr) {
