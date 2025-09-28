@@ -18,13 +18,12 @@ namespace PMAL {
  * Composed of user memory (what is interacted with directly) and registry memory (holds metadata
  * (e.g. allocators, statistics if enabled)).
  *
- * @param [ManagerSpec] ptrMemoryManagerSpec
+ * @param [ManagerSpec] ptrManagerSpec
  * A struct specifying base information and options for MemoryManager.
- * 
  */
 class MemoryManager {
   public:
-    MemoryManager(ManagerSpec *ptrMemoryManagerSpec);
+    MemoryManager(ManagerSpec *ptrManagerSpec);
     ~MemoryManager();
 
     template <typename ALLOCATOR_T> ALLOCATOR_T *allocator(size sizeBytes);
@@ -32,14 +31,18 @@ class MemoryManager {
     bool reSizeMemory(size sizeBytes);
 
 
-
   private:
     bool defregmentUserMemory();
-    Block* generateBlock();    
+    Block *generateBlock();
 
     void *m_ptrManagedMemory  = nullptr;
     void *m_ptrRegistryMemory = nullptr;
     void *m_ptrUserMemory     = nullptr;
+
+    bool m_statisticsEnabled = false;
+    bool m_resizeAllowed     = false;
+    bool m_registryAllocate  = true; // if sizeBytesRegistry in ManagerSpec is zero then metadata is
+                                     // allocated randomly in heap as no registry space exists
 
     std::vector<Block> m_blocks = {};
 };

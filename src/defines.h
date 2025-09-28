@@ -64,7 +64,7 @@ typedef struct Handle {
 typedef struct ManagerSpec {
     size sizeBytes         = 0;
     size sizeBytesRegistry = 1024 * 1024 + 16;
-    bool resizeAllowed     = false;
+    bool resizeAllowed     = true;
     float resizeFactor     = 0.2f;
     bool success           = false;
     bool enableStatistics  = false;
