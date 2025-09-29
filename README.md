@@ -27,7 +27,8 @@ Should be platform agnostic and majority of distros of Linux should play nice to
 ### Building
 To build, ensure you are in the directory and run:
 
-```sh
+```
+chmod +x build.sh
 ./build.sh
 ```
 If you want to run the test application to see what it can do then:
