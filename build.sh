@@ -138,7 +138,7 @@ $cmake_gen_cmd
 echo -e "${BUILD_C}[BUILD]${NC} Building project"
 $cmake_build_cmd
 
-# NOTE: Important... Ensures compile_commands.json is always in project directory for clangd to see
+# NOTE: Important... Ensures latest compile_commands.json is always in project directory for clangd to see
 if [ $debug -eq 1 ]; then
     cp ./build/debug/compile_commands.json .
 elif [ $releasedebug -eq 1 ]; then

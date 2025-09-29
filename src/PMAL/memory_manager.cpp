@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 
-PMAL::MemoryManager::MemoryManager(ManagerSpec* ptrManagerSpec) {
+PMAL::MemoryManager::MemoryManager(ManagerSpec *ptrManagerSpec) {
     // TODO: Include asserts
     m_ptrManagedMemory = std::malloc(ptrManagerSpec->sizeBytes + ptrManagerSpec->sizeBytesRegistry);
     if (m_ptrRegistryMemory == nullptr) {
@@ -29,5 +29,20 @@ PMAL::MemoryManager::MemoryManager(ManagerSpec* ptrManagerSpec) {
 
 
 PMAL::MemoryManager::~MemoryManager() {
+    // TODO: Logic to check nullptr - not double free
     std::free(m_ptrManagedMemory);
+}
+
+
+/**
+ * @brief
+ * Sorts the representation, a vector, of blocks from MemoryManager.
+ *
+ * Does not physically sort the blocks of memory that an allocator uses, defragmentBlocks is used
+ * for that. This function sorts blocks based of the index member in ascending order to
+ * ensure that when availabe space is queried, the vector that holds the blocks can walk the
+ * data structure which will allow for faster query (search) times. This function will most likely
+ * not be used often.
+ */
+void PMAL::MemoryManager::sortBlocks() {
 }

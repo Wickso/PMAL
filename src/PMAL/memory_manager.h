@@ -28,12 +28,13 @@ class MemoryManager {
 
     template <typename ALLOCATOR_T> ALLOCATOR_T *allocator(size sizeBytes);
 
-    bool reSizeMemory(size sizeBytes);
+    bool resizeMemory(size sizeBytes);
 
 
   private:
-    bool defregmentUserMemory();
-    Block *generateBlock();
+    Block *queryAvailableMemory();
+    bool defragmentBlocks();
+    void sortBlocks();
 
     void *m_ptrManagedMemory  = nullptr;
     void *m_ptrRegistryMemory = nullptr;
