@@ -3,37 +3,37 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <assert.h>
 
-PMAL::MemoryManager::MemoryManager(ManagerSpec *ptrManagerSpec) {
-    // TODO: Include asserts
-    m_ptrManagedMemory = std::malloc(ptrManagerSpec->sizeBytes + ptrManagerSpec->sizeBytesRegistry);
-    if (m_ptrRegistryMemory == nullptr) {
+
+pmal::MemoryManager::MemoryManager(MemoryManagerInfo *ptrMemoryManagerInfo) {
+    assert(ptrMemoryManagerInfo->sizeBytes > 0);
+    m_ptrManagedMemory = std::malloc(ptrMemoryManagerInfo->sizeBytes);
+    if (m_ptrManagedMemory == nullptr) {
         std::cout << "Failed to initialize managed memory.\n";
-        ptrManagerSpec->success = false;
+        ptrMemoryManagerInfo->success = false;
     }
-    m_ptrRegistryMemory = (void *)((u8 *)m_ptrManagedMemory + 16);
-    m_ptrUserMemory     = (void *)((u8 *)m_ptrRegistryMemory + ptrManagerSpec->sizeBytes);
-    m_blocks.reserve(8);
-    ptrManagerSpec->success = true;
+    ptrMemoryManagerInfo->success = true;
 
-    if (ptrManagerSpec->enableStatistics) {
+    if (ptrMemoryManagerInfo->enableStatistics) {
         m_statisticsEnabled = true;
     }
-    if (ptrManagerSpec->resizeAllowed) {
+    if (ptrMemoryManagerInfo->resizeAllowed) {
         m_resizeAllowed = true;
     }
-    if (ptrManagerSpec->sizeBytesRegistry == 0) {
-        m_registryAllocate = false;
+    if (!ptrMemoryManagerInfo->allignData) {
+        m_allignData = false;
     }
 }
 
 
-PMAL::MemoryManager::~MemoryManager() {
-    // TODO: Logic to check nullptr - not double free
+pmal::MemoryManager::~MemoryManager() {
     std::free(m_ptrManagedMemory);
 }
 
-
+// Will leave this here for now, don't believe I will need it as the vector of blocks should be
+// sorted intrinsiclly if the blocks are added and removed in the order of creation and deletion.
+// Testing will show if it is needed.
 /**
  * @brief
  * Sorts the representation, a vector, of blocks from MemoryManager.
@@ -44,5 +44,11 @@ PMAL::MemoryManager::~MemoryManager() {
  * data structure which will allow for faster query (search) times. This function will most likely
  * not be used often.
  */
-void PMAL::MemoryManager::sortBlocks() {
+void pmal::MemoryManager::sortBlocks() {
+    // NOTE: May not be needed
+}
+
+
+pmal::Block *pmal::MemoryManager::queryAvailableMemory() {
+    // TODO: finish this function
 }

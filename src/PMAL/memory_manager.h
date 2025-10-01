@@ -2,9 +2,9 @@
 #define MEMORY_MANAGER_H
 
 #include "defines.h"
-#include <vector>
+#include <array>
 
-namespace PMAL {
+namespace pmal {
 
 /**
  * @class MemoryManager
@@ -13,17 +13,22 @@ namespace PMAL {
  *
  * MemoryManager must be instantiated before allocators can be created and used. The purpose of
  * MemoryManager is to manage the memory requested by the user through the operation of
- * its allocators or user-defined allocators.
+ * its allocators or user-defined allocators: constrained to ten allocators per MemoryManager
+ * object. If more are needed then simply create another MemoryManager.
  *
  * Composed of user memory (what is interacted with directly) and registry memory (holds metadata
  * (e.g. allocators, statistics if enabled)).
  *
- * @param [ManagerSpec] ptrManagerSpec
+ * Note: Blocks will be 4-byte aligned, meaning the user may not be able to use 100% of the memory
+ * requested. Either change the resize factor to something smaller for minute changes or disable
+ * alligning, both in MemoryManagerInfo.
+ *
+ * @param [MemoryManagerInfo] ptrMemoryManagerInfo
  * A struct specifying base information and options for MemoryManager.
  */
 class MemoryManager {
   public:
-    MemoryManager(ManagerSpec *ptrManagerSpec);
+    MemoryManager(MemoryManagerInfo *ptrMemoryManagerInfo);
     ~MemoryManager();
 
     template <typename ALLOCATOR_T> ALLOCATOR_T *allocator(size sizeBytes);
@@ -36,16 +41,14 @@ class MemoryManager {
     bool defragmentBlocks();
     void sortBlocks();
 
-    void *m_ptrManagedMemory  = nullptr;
-    void *m_ptrRegistryMemory = nullptr;
-    void *m_ptrUserMemory     = nullptr;
+    void *m_ptrManagedMemory = nullptr;
 
     bool m_statisticsEnabled = false;
     bool m_resizeAllowed     = false;
-    bool m_registryAllocate  = true; // if sizeBytesRegistry in ManagerSpec is zero then metadata is
-                                     // allocated randomly in heap as no registry space exists
+    bool m_registryAllocate  = true; // if false then metadata is allocated randomly in heap
+    bool m_allignData        = true;
 
-    std::vector<Block> m_blocks = {};
+    std::array<Block, 10> m_blocks = {};
 };
 
 
@@ -58,16 +61,17 @@ class MemoryManager {
  * this allocator to work within. Allocators hold a reference to the MemoryManager object that
  * created it and vice versa. This means that the MemoryManager can free the allocator if
  * MemoryManager itself is freed and if the allocator is no longer needed then its reference is
- * removed from the MemoryManager as to nullify any chances of use after free errors.
+ * removed from the MemoryManager as to nullify any chances of use after free errors. Allocation is
+ * through the heap so instantiation is not recomended in loops.
  *
  * @param [size] sizeBytes:
  * The size in bytes of memory requested.
  *
  * @return A pointer to type of allocator requested by the user.
  */
-template <typename ALLOCATOR_T> ALLOCATOR_T *PMAL::MemoryManager::allocator(size sizeBytes) {
+template <typename ALLOCATOR_T> ALLOCATOR_T *pmal::MemoryManager::allocator(size sizeBytes) {
 }
 
-} // namespace PMAL
+} // namespace pmal
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-namespace PMAL {
+namespace pmal {
 
 using u8    = std::uint8_t;
 using u32   = std::uint32_t;
@@ -39,18 +39,14 @@ typedef struct Handle {
  * @brief
  * A struct to provide information to MemoryManger on instantiation.
  *
- * Once passed to MemoryManager it is fine for the user to destroy this struct. Usage will no longer
- * be needed. Note the total size of memory on the heap is sizeBytes + sizeBytesRegistry however
- * sizeBytesRegistry can be set to zero and meta data will be allocated to the heap at random which
- * will more than likely incure performance overhead.
+ * Once passed to MemoryManager it is fine for the user to destroy this struct if heap allocated. Usage will no longer
+ * be needed. Recommended to check if memory allocation was successful before destruction.
  *
  * @param [size] sizeBytes:
  * The size of memory to be allocated and managed on the heap for the user.
- * @param [size] sizeBytesRegistry:
- * The size of registry. Default 1024*1024+16 bytes
  * @param [bool] resizeAllowed:
  * If the memory being managed turns out to not be sufficient this options lets MemoryManager
- * dynamically resize the memory for extra space. Resizes by 20% by default or what is needed to
+ * dynamically resize the memory for extra space. Resizes 10% by default or what is needed to
  * accomodate the data being constructed.
  * @param [float] resizeFactor:
  * Factor to increase memory by if needed/allowed.
@@ -61,14 +57,17 @@ typedef struct Handle {
  * An option if set to true will enable statisitics to be gathered by MemoryManager. Recommended
  * during debug builds. MemoryStatistics object will track each MemoryManagers stats and collate.
  */
-typedef struct ManagerSpec {
+typedef struct MemoryManagerInfo {
     size sizeBytes         = 0;
-    size sizeBytesRegistry = 1024 * 1024 + 16;
     bool resizeAllowed     = true;
-    float resizeFactor     = 0.2f;
+    float resizeFactor     = 0.1f;
     bool success           = false;
     bool enableStatistics  = false;
-} ManagerSpec;
+    bool allignData        = true;
+} MemoryManagerInfo;
 
-} // namespace PMAL
+
+// TODO: Add Scope and Ref customs ptrs
+
+} // namespace pmal
 #endif
