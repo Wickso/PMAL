@@ -1,9 +1,9 @@
 #include "memory_manager.h"
 #include "defines.h"
 
+#include <assert.h>
 #include <cstdlib>
 #include <iostream>
-#include <assert.h>
 
 
 pmal::MemoryManager::MemoryManager(MemoryManagerInfo *ptrMemoryManagerInfo) {
@@ -14,6 +14,7 @@ pmal::MemoryManager::MemoryManager(MemoryManagerInfo *ptrMemoryManagerInfo) {
         ptrMemoryManagerInfo->success = false;
     }
     ptrMemoryManagerInfo->success = true;
+    m_blocks.reserve(10);
 
     if (ptrMemoryManagerInfo->enableStatistics) {
         m_statisticsEnabled = true;
@@ -49,6 +50,28 @@ void pmal::MemoryManager::sortBlocks() {
 }
 
 
-pmal::Block *pmal::MemoryManager::queryAvailableMemory() {
+bool pmal::MemoryManager::queryAvailableMemory(size sizeBytes, Block *ptrBlock) {
     // TODO: finish this function
+
+    // query MemoryManager and allocate block for the size. If not, resize managed memory if allowed
+    // populate the block supplied by the newAllocator function and store a reference to the block
+    // in MemoryManager. MemoryManager references the block but the allocator owns it. return
+    // true/false for success/fail
+   
+    // helper lambda function
+    auto populate = [&](void* ptr) {
+        (*ptrBlock).sizeBytes = sizeBytes;
+        (*ptrBlock).ptrHeapBlock = ptr;
+        (*ptrBlock).blockIndex = (size*)m_ptrManagedMemory - (size*)ptr;
+        (*ptrBlock).endOfBlock = (*ptrBlock).blockIndex + sizeBytes;
+    };
+
+    // Query for available size of bytes. First fit algorithm
+    if (m_blocks.empty()) {
+        populate(m_ptrManagedMemory);
+        // TODO: add ptr to singly linked list
+    }
+    for (int i = 0; i < m_blocks.size(); ++i) {
+
+    }
 }

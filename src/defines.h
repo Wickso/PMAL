@@ -17,10 +17,10 @@ using size  = std::uint64_t; // size: unit in bytes
  * manager.
  */
 typedef struct Block {
-    void *ptrBlock   = nullptr;
-    index blockIndex = 0;
-    index endOfBlock = 0;
-    size sizeBytes   = 0;
+    void *ptrHeapBlock = nullptr; // ptr to start of physical memory to be allocated in
+    index blockIndex   = 0;
+    index endOfBlock   = 0;
+    size sizeBytes     = 0;
 } Block;
 
 
@@ -39,8 +39,9 @@ typedef struct Handle {
  * @brief
  * A struct to provide information to MemoryManger on instantiation.
  *
- * Once passed to MemoryManager it is fine for the user to destroy this struct if heap allocated. Usage will no longer
- * be needed. Recommended to check if memory allocation was successful before destruction.
+ * Once passed to MemoryManager it is fine for the user to destroy this struct if heap allocated.
+ * Usage will no longer be needed. Recommended to check if memory allocation was successful before
+ * destruction.
  *
  * @param [size] sizeBytes:
  * The size of memory to be allocated and managed on the heap for the user.
@@ -58,12 +59,12 @@ typedef struct Handle {
  * during debug builds. MemoryStatistics object will track each MemoryManagers stats and collate.
  */
 typedef struct MemoryManagerInfo {
-    size sizeBytes         = 0;
-    bool resizeAllowed     = true;
-    float resizeFactor     = 0.1f;
-    bool success           = false;
-    bool enableStatistics  = false;
-    bool allignData        = true;
+    size sizeBytes        = 0;
+    bool resizeAllowed    = true;
+    float resizeFactor    = 0.1f;
+    bool success          = false;
+    bool enableStatistics = false;
+    bool allignData       = true;
 } MemoryManagerInfo;
 
 

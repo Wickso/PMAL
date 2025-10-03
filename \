@@ -31,13 +31,13 @@ class MemoryManager {
     MemoryManager(MemoryManagerInfo *ptrMemoryManagerInfo);
     ~MemoryManager();
 
-    template <typename ALLOCATOR_T> ALLOCATOR_T *newAllocator(size sizeBytes);
+    template <typename ALLOCATOR_T> ALLOCATOR_T *allocator(size sizeBytes);
 
     bool resizeMemory(size sizeBytes);
 
 
   private:
-    bool queryAvailableMemory(size sizeBytes, Block* blockPopulate);
+    Block *queryAvailableMemory();
     bool defragmentBlocks();
     void sortBlocks();
 
@@ -45,13 +45,10 @@ class MemoryManager {
 
     bool m_statisticsEnabled = false;
     bool m_resizeAllowed     = false;
-    //bool m_registryAllocate  = true; // if false then metadata is allocated randomly in heap
+    bool m_registryAllocate  = true; // if false then metadata is allocated randomly in heap
     bool m_allignData        = true;
-    float m_resizeFactor     = 0.1f;
 
-
-    // TODO: chnage to singly linked list
-    std::vector<Block*> m_blocks = {};
+    std::vector<Block> m_blocks = {};
 };
 
 
@@ -72,7 +69,7 @@ class MemoryManager {
  *
  * @return A pointer to type of allocator requested by the user.
  */
-template <typename ALLOCATOR_T> ALLOCATOR_T *pmal::MemoryManager::newAllocator(size sizeBytes) {
+template <typename ALLOCATOR_T> ALLOCATOR_T *pmal::MemoryManager::allocator(size sizeBytes) {
 }
 
 } // namespace pmal
