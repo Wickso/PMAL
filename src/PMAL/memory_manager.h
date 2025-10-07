@@ -47,7 +47,7 @@ class MemoryManager {
     bool m_statisticsEnabled = false;
     bool m_resizeAllowed     = false;
     //bool m_registryAllocate  = true; // if false then metadata is allocated randomly in heap
-    float m_resizeFactor     = 0.1f;
+    float m_resizeFactor     = 1.1f;
 
 
     std::forward_list<Block*> m_blocks = {};
