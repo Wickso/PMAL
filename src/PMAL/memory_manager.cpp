@@ -14,16 +14,13 @@ pmal::MemoryManager::MemoryManager(MemoryManagerInfo *ptrMemoryManagerInfo) {
         ptrMemoryManagerInfo->success = false;
     }
     ptrMemoryManagerInfo->success = true;
-    m_blocks.reserve(10);
+    m_managedMemorySize           = ptrMemoryManagerInfo->sizeBytes;
 
     if (ptrMemoryManagerInfo->enableStatistics) {
         m_statisticsEnabled = true;
     }
     if (ptrMemoryManagerInfo->resizeAllowed) {
         m_resizeAllowed = true;
-    }
-    if (!ptrMemoryManagerInfo->allignData) {
-        m_allignData = false;
     }
 }
 
@@ -32,46 +29,79 @@ pmal::MemoryManager::~MemoryManager() {
     std::free(m_ptrManagedMemory);
 }
 
-// Will leave this here for now, don't believe I will need it as the vector of blocks should be
-// sorted intrinsiclly if the blocks are added and removed in the order of creation and deletion.
-// Testing will show if it is needed.
-/**
- * @brief
- * Sorts the representation, a vector, of blocks from MemoryManager.
- *
- * Does not physically sort the blocks of memory that an allocator uses, defragmentBlocks is used
- * for that. This function sorts blocks based of the index member in ascending order to
- * ensure that when availabe space is queried, the vector that holds the blocks can walk the
- * data structure which will allow for faster query (search) times. This function will most likely
- * not be used often.
- */
-void pmal::MemoryManager::sortBlocks() {
-    // NOTE: May not be needed
+
+bool pmal::MemoryManager::resizeMemory(size sizeBytes) {
+    // TODO: do this function
+
+    // NOTE: Need to sus whether memcopy or memmove is the correct approach
 }
 
 
 bool pmal::MemoryManager::queryAvailableMemory(size sizeBytes, Block *ptrBlock) {
-    // TODO: finish this function
+    assert(ptrBlock != nullptr);
+    assert(sizeBytes > 0);
 
-    // query MemoryManager and allocate block for the size. If not, resize managed memory if allowed
-    // populate the block supplied by the newAllocator function and store a reference to the block
-    // in MemoryManager. MemoryManager references the block but the allocator owns it. return
-    // true/false for success/fail
-   
-    // helper lambda function
-    auto populate = [&](void* ptr) {
-        (*ptrBlock).sizeBytes = sizeBytes;
-        (*ptrBlock).ptrHeapBlock = ptr;
-        (*ptrBlock).blockIndex = (size*)m_ptrManagedMemory - (size*)ptr;
-        (*ptrBlock).endOfBlock = (*ptrBlock).blockIndex + sizeBytes;
+    // NOTE: The -2 in the algorithm when comparing sizes is to exclude the 'cell' that the start
+    // and end of the already allocated blocks inhabit. This gives just the amount of bytes between
+    // them.
+
+    // helper lambda function. Takes a ptr to where the block will be in indexed in physical mem
+    auto populate = [&](void *ptr) {
+        ptrBlock->sizeBytes    = sizeBytes;
+        ptrBlock->ptrHeapBlock = ptr;
+        ptrBlock->blockIndex   = (size *)ptr - (size *)m_ptrManagedMemory;
+        std::cout << "Debug: blockIndex = " << ptrBlock->blockIndex << "\n";
+        ptrBlock->endOfBlock = (*ptrBlock).blockIndex + sizeBytes;
+    };
+
+    // helper lambda to get the ptr to block where it will be in physical mem
+    auto getHeapBlockPtr = [&](Block* ptrPrevBlock) {
+        // +1 brings it outside of the last block.
+        index blockIndex = ptrPrevBlock->endOfBlock + 1;
+        void* ptrHeapBlock = (void*)((u8*)m_ptrManagedMemory + blockIndex);
+        return ptrHeapBlock;
     };
 
     // Query for available size of bytes. First fit algorithm
-    if (m_blocks.empty()) {
-        populate(m_ptrManagedMemory);
-        // TODO: add ptr to singly linked list
-    }
-    for (int i = 0; i < m_blocks.size(); ++i) {
 
+    // if no blocks, then allocate at start: edge case
+    if (m_blocks.empty() && ptrBlock->sizeBytes < m_managedMemorySize) {
+        populate(m_ptrManagedMemory);
+        m_blocks.push_front(ptrBlock);
+        return true;
     }
+    // walk m_blocks container, compare byte gap between elements and insert
+    // where byte gap > sizeBytes
+
+    auto left  = m_blocks.begin();
+    auto right = std::next(left, 1);
+    while (left != m_blocks.end()) {
+
+        // 'left' at last element: edge case
+        if (right == m_blocks.end()) {
+            if ((m_managedMemorySize - (*left)->endOfBlock) - 2 > (*left)->sizeBytes) {
+                populate(getHeapBlockPtr(*left));
+                m_blocks.insert_after(left, ptrBlock);
+            } else if(m_resizeAllowed) {
+                if (!resizeMemory(size(m_managedMemorySize*m_resizeFactor))) {
+                    return false;
+                }
+                continue; // restart without incrementing iterators.
+            }
+            else {
+                return false;
+            }
+            return true;
+        }
+
+        // check for free space in middle of container.
+        if (((*right)->blockIndex - (*left)->endOfBlock) - 2 > ptrBlock->sizeBytes) {
+            populate(getHeapBlockPtr(*left));
+            m_blocks.insert_after(left, ptrBlock);
+            return true;
+        }
+        std::advance(left, 1);
+        std::advance(right, 1);
+    }
+    return false;
 }

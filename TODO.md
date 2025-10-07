@@ -6,4 +6,4 @@ Version 0.1
 - [ ] Program block and handle query logic
 - [ ] Program an allocator
 - [ ] Program MemoryManager::allocator logic
-- [ ] Change vector data structure to singly linked list for blocks (insertion is quick and search was always going to be O(n))
+- [ ] Change vector data structure to singly linked list (forward_list container) for blocks (insertion is quick and search was always going to be O(n))

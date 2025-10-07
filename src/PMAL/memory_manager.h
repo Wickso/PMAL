@@ -2,7 +2,7 @@
 #define MEMORY_MANAGER_H
 
 #include "defines.h"
-#include <vector>
+#include <forward_list>
 
 namespace pmal {
 
@@ -42,16 +42,15 @@ class MemoryManager {
     void sortBlocks();
 
     void *m_ptrManagedMemory = nullptr;
+    size m_managedMemorySize = 0;
 
     bool m_statisticsEnabled = false;
     bool m_resizeAllowed     = false;
     //bool m_registryAllocate  = true; // if false then metadata is allocated randomly in heap
-    bool m_allignData        = true;
     float m_resizeFactor     = 0.1f;
 
 
-    // TODO: chnage to singly linked list
-    std::vector<Block*> m_blocks = {};
+    std::forward_list<Block*> m_blocks = {};
 };
 
 

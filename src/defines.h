@@ -64,7 +64,6 @@ typedef struct MemoryManagerInfo {
     float resizeFactor    = 0.1f;
     bool success          = false;
     bool enableStatistics = false;
-    bool allignData       = true;
 } MemoryManagerInfo;
 
 
