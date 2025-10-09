@@ -37,9 +37,9 @@ class MemoryManager {
 
 
   private:
-    bool queryAvailableMemory(size sizeBytes, Block* blockPopulate);
+    bool queryAvailableMemory(size sizeBytes, Block* ptrBlcok);
+    void populateBlockData(size sizeBytes, Block* ptrPopulateBlock, Block* ptrPrev, Block* ptrNext);
     bool defragmentBlocks();
-    void sortBlocks();
 
     void *m_ptrManagedMemory = nullptr;
     size m_managedMemorySize = 0;

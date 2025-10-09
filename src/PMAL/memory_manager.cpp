@@ -37,13 +37,24 @@ bool pmal::MemoryManager::resizeMemory(size sizeBytes) {
 }
 
 
+void pmal::MemoryManager::populateBlockData(size sizeBytes, Block *ptrPopulateBlock, Block *ptrPrev,
+                                            Block *ptrNext) {
+    size byteAlign = 4;
+    index prevEndIndex = ptrPrev->endOfBlock;
+    index nextStartIndex = ptrNext->blockIndex;
+
+    // find start and end index to start
+    ptrPopulateBlock->sizeBytes = sizeBytes;
+    ptrPopulateBlock->blockIndex = prevEndIndex + (byteAlign - (prevEndIndex % byteAlign));
+    ptrPopulateBlock->endOfBlock = ptrPopulateBlock->blockIndex + sizeBytes;
+    
+}
+
+// TODO: Fix the algorithm for finding correct space
 bool pmal::MemoryManager::queryAvailableMemory(size sizeBytes, Block *ptrBlock) {
     assert(ptrBlock != nullptr);
     assert(sizeBytes > 0);
-
-    // NOTE: The -2 in the algorithm when comparing sizes is to exclude the 'cell' that the start
-    // and end of the already allocated blocks inhabit. This gives just the amount of bytes between
-    // them.
+    assert(sizeBytes < m_managedMemorySize);
 
     // helper lambda function. Takes a ptr to where the block will be in indexed in physical mem
     auto populate = [&](void *ptr) {
@@ -55,17 +66,17 @@ bool pmal::MemoryManager::queryAvailableMemory(size sizeBytes, Block *ptrBlock) 
     };
 
     // helper lambda to get the ptr to block where it will be in physical mem
-    auto getHeapBlockPtr = [&](Block* ptrPrevBlock) {
+    auto getHeapBlockPtr = [&](Block *ptrPrevBlock) {
         // +1 brings it outside of the last block.
-        index blockIndex = ptrPrevBlock->endOfBlock + 1;
-        void* ptrHeapBlock = (void*)((u8*)m_ptrManagedMemory + blockIndex);
+        index blockIndex   = ptrPrevBlock->endOfBlock + 1;
+        void *ptrHeapBlock = (void *)((u8 *)m_ptrManagedMemory + blockIndex);
         return ptrHeapBlock;
     };
 
     // Query for available size of bytes. First fit algorithm
 
     // if no blocks, then allocate at start: edge case
-    if (m_blocks.empty() && ptrBlock->sizeBytes < m_managedMemorySize) {
+    if (m_blocks.empty()) {
         populate(m_ptrManagedMemory);
         m_blocks.push_front(ptrBlock);
         return true;
@@ -79,23 +90,22 @@ bool pmal::MemoryManager::queryAvailableMemory(size sizeBytes, Block *ptrBlock) 
 
         // 'left' at last element: edge case
         if (right == m_blocks.end()) {
-            if ((m_managedMemorySize - (*left)->endOfBlock) - 2 > (*left)->sizeBytes) {
+            if ((m_managedMemorySize - (*left)->endOfBlock - 1) + 8 > (*left)->sizeBytes) {
                 populate(getHeapBlockPtr(*left));
                 m_blocks.insert_after(left, ptrBlock);
-            } else if(m_resizeAllowed) {
-                if (!resizeMemory(size(m_managedMemorySize*m_resizeFactor))) {
+            } else if (m_resizeAllowed) {
+                if (!resizeMemory(size(m_managedMemorySize * m_resizeFactor))) {
                     return false;
                 }
                 continue; // restart without incrementing iterators.
-            }
-            else {
+            } else {
                 return false;
             }
             return true;
         }
 
         // check for free space in middle of container.
-        if (((*right)->blockIndex - (*left)->endOfBlock) - 2 > ptrBlock->sizeBytes) {
+        if (((*right)->blockIndex - (*left)->endOfBlock - 1) + 8 > ptrBlock->sizeBytes) {
             populate(getHeapBlockPtr(*left));
             m_blocks.insert_after(left, ptrBlock);
             return true;
